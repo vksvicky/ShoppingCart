@@ -4,11 +4,11 @@ package sc;
  * Created by vivek on 07/10/2014.
  */
 public class GenerateBill implements ShoppingVisitor {
-    boolean outOfStock = false;
+    boolean itemDoesNotExist = false;
     int newQuantity = 0;
 
     @Override
-    public void visitShoppingCart(ShoppingCart shoppingCart) throws ShoppingCartException {
+    public void visitShoppingCart(ShoppingCart shoppingCart) {
         for (int i = 0; i < shoppingCart.getShoppingItems().size(); i++) {
             shoppingCart.getShoppingItems().get(i).accept(this);
         }
@@ -17,12 +17,12 @@ public class GenerateBill implements ShoppingVisitor {
     }
 
     @Override
-    public void visitCartItem(Item item) throws ShoppingCartException {
+    public void visitCartItem(Item item) {
         double itemCost = 0.0;
 
         DiscountCalculation(item);
 
-        if (!outOfStock) {
+        if (!itemDoesNotExist) {
             itemCost = newQuantity * item.getPrice();
 
             item.getShoppingCart().setTotalBill(
@@ -32,7 +32,7 @@ public class GenerateBill implements ShoppingVisitor {
                     item.getName().toUpperCase() +
                     " @ " + item.getPrice() + " - £" + itemCost);
         } else {
-            throw new ShoppingCartException("Item Not In Stock!");
+            throw new IllegalArgumentException("Item such item in Stock!");
         }
 
     }
@@ -46,8 +46,6 @@ public class GenerateBill implements ShoppingVisitor {
                 //Checking if there are odd apples, then 1 will be need to added explicitly
                 if (item.getQuantity() > 1) {
                     newQuantity = item.getQuantity() - (item.getQuantity() / 2);
-                } else {
-                    newQuantity = item.getQuantity();
                 }
                 break;
 
@@ -55,13 +53,11 @@ public class GenerateBill implements ShoppingVisitor {
                 //Specifically checking 3 for the price of 2
                 if (item.getQuantity() > 2) {
                     newQuantity = item.getQuantity() - (item.getQuantity() / 3);
-                } else {
-                    newQuantity = item.getQuantity();
                 }
                 break;
 
             default:
-                outOfStock = true;
+                itemDoesNotExist = true;
                 break;
         }
     }

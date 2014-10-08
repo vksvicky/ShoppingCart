@@ -49,7 +49,7 @@ public class Item implements ShoppingCartElement {
     }
 
     @Override
-    public void accept(ShoppingVisitor shoppingVisitor) throws ShoppingCartException {
+    public void accept(ShoppingVisitor shoppingVisitor) {
         shoppingVisitor.visitCartItem(this);
     }
 }
