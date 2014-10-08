@@ -34,7 +34,8 @@ public class ShoppingCart implements ShoppingCartElement {
     }
 
     @Override
-    public void accept(ShoppingVisitor shoppingVisitor) {
+    public void accept(ShoppingVisitor shoppingVisitor) throws ShoppingCartException {
         shoppingVisitor.visitShoppingCart(this);
     }
+
 }

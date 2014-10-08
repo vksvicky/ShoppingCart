@@ -5,7 +5,7 @@ package sc;
  */
 public class ShowCustomerBill {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ShoppingCartException {
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.addShoppingItem(new Item("Apple", 4, 0.60));
         shoppingCart.addShoppingItem(new Item("Orange", 8, 0.25));

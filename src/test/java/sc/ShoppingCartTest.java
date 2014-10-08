@@ -81,7 +81,7 @@ public class ShoppingCartTest {
     }
 
     @Test
-    public void testTotalShoppingCartVale() {
+    public void testTotalShoppingCartValue() {
         shoppingCart.addShoppingItem(new Item(APPLE, 3, 0.60));
         shoppingCart.addShoppingItem(new Item(ORANGE, 2, 0.25));
 
@@ -92,6 +92,59 @@ public class ShoppingCartTest {
         }
 
         assertTrue(itemCost==2.3);
+    }
+
+    @Test
+    public void testDiscountOnApple() {
+        shoppingCart.addShoppingItem(new Item(APPLE, 3, 0.60));
+        //shoppingCart.addShoppingItem(new Item(ORANGE, 2, 0.25));
+
+        double itemCost = 0.0;
+
+        GenerateBill generateBill = new GenerateBill();
+        generateBill.DiscountCalculation(shoppingCart.getShoppingItems().get(0));
+
+        itemCost = generateBill.newQuantity * shoppingCart.getShoppingItems().get(0).getPrice();
+
+        assertTrue(itemCost==1.2);
+    }
+
+    @Test
+    public void testDiscountOnAppleAndOrange() {
+        shoppingCart.addShoppingItem(new Item(APPLE, 4, 0.60));
+        shoppingCart.addShoppingItem(new Item(ORANGE, 8, 0.25));
+
+        double itemCost = 0.0;
+
+        GenerateBill generateBill = new GenerateBill();
+
+        for (Item _item : shoppingCart.getShoppingItems()) {
+            generateBill.DiscountCalculation(_item);
+
+            itemCost += generateBill.newQuantity * _item.getPrice();
+
+        }
+
+        assertTrue(itemCost==2.7);
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUnknowItem() {
+        shoppingCart.addShoppingItem(new Item("Banana", 4, 0.60));
+
+        double itemCost = 0.0;
+
+        GenerateBill generateBill = new GenerateBill();
+
+        for (Item _item : shoppingCart.getShoppingItems()) {
+            generateBill.DiscountCalculation(_item);
+
+            itemCost += generateBill.newQuantity * _item.getPrice();
+
+        }
+
+        assertTrue(itemCost==2.7);
     }
 
 
