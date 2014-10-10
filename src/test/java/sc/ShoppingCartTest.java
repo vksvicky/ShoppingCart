@@ -5,10 +5,6 @@ import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
@@ -16,22 +12,17 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by vivek on 07/10/2014.
  */
 public class ShoppingCartTest {
 
-    public static final String APPLE = "Apple";
-    public static final String ORANGE = "Orange";
     ShoppingCart shoppingCart;
-    Set<String> defaultItems;
 
     @Before
     public void setUp() {
         shoppingCart = new ShoppingCart();
-        defaultItems = new HashSet<>(Arrays.asList(APPLE, ORANGE));
     }
 
     @Test
@@ -41,7 +32,7 @@ public class ShoppingCartTest {
 
     @Test
     public void testOnlyOneItemInCart() {
-        shoppingCart.addShoppingItem(new Item(APPLE, 1, 0.60));
+        shoppingCart.addShoppingItem(new Item(ItemEnum.Apple.toString(), 1, 0.60));
 
         int numberOfItems = shoppingCart.getShoppingItems().size();
 
@@ -50,8 +41,8 @@ public class ShoppingCartTest {
 
     @Test
     public void testOnlyTwoItemsInCart() {
-        shoppingCart.addShoppingItem(new Item(APPLE, 1, 0.60));
-        shoppingCart.addShoppingItem(new Item(ORANGE, 1, 0.25));
+        shoppingCart.addShoppingItem(new Item(ItemEnum.Apple.toString(), 1, 0.60));
+        shoppingCart.addShoppingItem(new Item(ItemEnum.Orange.toString(), 1, 0.25));
 
         int numberOfItems = shoppingCart.getShoppingItems().size();
 
@@ -60,91 +51,83 @@ public class ShoppingCartTest {
 
     @Test
     public void testShoppingCartContainsApplesAndThreeApples() {
-        shoppingCart.addShoppingItem(new Item(APPLE, 3, 0.60));
+        shoppingCart.addShoppingItem(new Item(ItemEnum.Apple.toString(), 3, 0.60));
 
 //        assertThat(shoppingCart.getShoppingItems(), containsInAnyOrder(hasProperty("name", is("Apple")), hasProperty("quantity", equalTo(3))));
 
-        assertThat(shoppingCart.getShoppingItems(), containsInAnyOrder(hasProperty("name", is(APPLE))));
+        assertThat(shoppingCart.getShoppingItems(), containsInAnyOrder(hasProperty("name", is(ItemEnum.Apple.toString()))));
         assertThat(shoppingCart.getShoppingItems(), hasItem(Matchers.<Item>hasProperty("quantity", equalTo(3))));
 
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testShoppingCartDoesNotContainItemsInSet() {
-        shoppingCart.addShoppingItem(new Item("Banana", 1, 0.20));
+        //shoppingCart.addShoppingItem(new Item(ItemEnum.Banana.toString(), 1, 0.20));
         shoppingCart.addShoppingItem(new Item("Strawberry", 1, 0.15));
 
         for (Item _item : shoppingCart.getShoppingItems()) {
-            assertEquals(false, defaultItems.contains(_item.getName()));
+            assertEquals(false, ItemEnum.valueOf(_item.getName()));
         }
 
     }
 
     @Test
     public void testTotalShoppingCartValue() {
-        shoppingCart.addShoppingItem(new Item(APPLE, 3, 0.60));
-        shoppingCart.addShoppingItem(new Item(ORANGE, 2, 0.25));
+        shoppingCart.addShoppingItem(new Item(ItemEnum.Apple.toString(), 3, 0.60));
+        shoppingCart.addShoppingItem(new Item(ItemEnum.Orange.toString(), 2, 0.25));
 
-        double itemCost = 0.0;
+        shoppingCart.accept(new GenerateBill());
 
-        for (Item _item : shoppingCart.getShoppingItems()) {
-            itemCost += _item.getQuantity() * _item.getPrice();
-        }
-
-        assertTrue(itemCost==2.3);
+        assertThat(shoppingCart.getTotalBill(), is(1.7));
     }
 
     @Test
     public void testDiscountOnApple() {
-        shoppingCart.addShoppingItem(new Item(APPLE, 3, 0.60));
-        //shoppingCart.addShoppingItem(new Item(ORANGE, 2, 0.25));
+        shoppingCart.addShoppingItem(new Item(ItemEnum.Apple.toString(), 3, 0.60));
 
-        double itemCost = 0.0;
+        shoppingCart.accept(new GenerateBill());
 
-        GenerateBill generateBill = new GenerateBill();
-        generateBill.DiscountCalculation(shoppingCart.getShoppingItems().get(0));
-
-        itemCost = generateBill.newQuantity * shoppingCart.getShoppingItems().get(0).getPrice();
-
-        assertTrue(itemCost==1.2);
+        assertThat(shoppingCart.getTotalBill(), is(1.2));
     }
 
     @Test
     public void testDiscountOnAppleAndOrange() {
-        shoppingCart.addShoppingItem(new Item(APPLE, 4, 0.60));
-        shoppingCart.addShoppingItem(new Item(ORANGE, 8, 0.25));
+        shoppingCart.addShoppingItem(new Item(ItemEnum.Apple.toString(), 4, 0.60));
+        shoppingCart.addShoppingItem(new Item(ItemEnum.Orange.toString(), 8, 0.25));
 
-        double itemCost = 0.0;
+        shoppingCart.accept(new GenerateBill());
 
-        GenerateBill generateBill = new GenerateBill();
-
-        for (Item _item : shoppingCart.getShoppingItems()) {
-            generateBill.DiscountCalculation(_item);
-
-            itemCost += generateBill.newQuantity * _item.getPrice();
-
-        }
-
-        assertTrue(itemCost==2.7);
+        assertThat(shoppingCart.getTotalBill(), is(2.7));
     }
 
 
     @Test(expected = IllegalArgumentException.class)
     public void testUnknowItem() {
-        shoppingCart.addShoppingItem(new Item("Banana", 4, 0.60));
+        shoppingCart.addShoppingItem(new Item("Peaches", 4, 0.20));
+        shoppingCart.accept(new GenerateBill());
 
-        double itemCost = 0.0;
+        assertThat(shoppingCart.getTotalBill(), is(2.7));
+    }
 
-        GenerateBill generateBill = new GenerateBill();
+    @Test
+    public void testOneBanana() {
+        shoppingCart.addShoppingItem(new Item(ItemEnum.Banana.toString(), 1, 0.20));
 
-        for (Item _item : shoppingCart.getShoppingItems()) {
-            generateBill.DiscountCalculation(_item);
+        assertThat(shoppingCart.getShoppingItems().size(), is(1));
+        assertThat(shoppingCart.getShoppingItems().get(0).getName(), is(ItemEnum.Banana.toString()));
 
-            itemCost += generateBill.newQuantity * _item.getPrice();
+        shoppingCart.accept(new GenerateBill());
 
-        }
+        assertThat(shoppingCart.getTotalBill(), is(0.20));
+    }
 
-        assertTrue(itemCost==2.7);
+    @Test
+    public void testNewItem() {
+        shoppingCart.addShoppingItem(new Item(ItemEnum.Banana.toString(), 4, 0.20));
+
+        shoppingCart.accept(new GenerateBill());
+
+        assertThat(shoppingCart.getTotalBill(), is(0.4));
     }
 
 

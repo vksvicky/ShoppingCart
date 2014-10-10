@@ -42,6 +42,7 @@ public class GenerateBill implements ShoppingVisitor {
 
         switch (ItemEnum.valueOf(item.getName())) {
             case Apple:
+            case Banana:
                 //Specifically checking buy 1 get 1 offer
                 //Checking if there are odd apples, then 1 will be need to added explicitly
                 if (item.getQuantity() > 1) {

@@ -5,7 +5,8 @@ package sc;
  */
 public enum ItemEnum {
     Apple ("Apple"),
-    Orange ("Orange");
+    Orange ("Orange"),
+    Banana ("Banana");
 
     private final String value;
 
