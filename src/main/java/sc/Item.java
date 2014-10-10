@@ -1,16 +1,18 @@
 package sc;
 
+import java.math.BigDecimal;
+
 /**
  * Created by vivek on 07/10/2014.
  */
 public class Item implements ShoppingCartElement {
     private String name;
     private int quantity;
-    private double price;
+    private BigDecimal price;
 
     private ShoppingCart shoppingCart;
 
-    public Item(String name, int quantity, double price) {
+    public Item(String name, int quantity, BigDecimal price) {
         this.name = name;
         this.quantity = quantity;
         this.price = price;
@@ -32,11 +34,11 @@ public class Item implements ShoppingCartElement {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

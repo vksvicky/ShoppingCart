@@ -1,5 +1,6 @@
 package sc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  */
 public class ShoppingCart implements ShoppingCartElement {
 
-    private double totalBill;
+    private BigDecimal totalBill = new BigDecimal(0.0);
 
     private List<Item> shoppingItems = new ArrayList();
 
@@ -25,11 +26,11 @@ public class ShoppingCart implements ShoppingCartElement {
         this.shoppingItems = shoppingItems;
     }
 
-    public double getTotalBill() {
+    public BigDecimal getTotalBill() {
         return totalBill;
     }
 
-    public void setTotalBill(double totalBill) {
+    public void setTotalBill(BigDecimal totalBill) {
         this.totalBill = totalBill;
     }
 

@@ -1,5 +1,8 @@
 package sc;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  * Created by vivek on 07/10/2014.
  */
@@ -13,26 +16,27 @@ public class GenerateBill implements ShoppingVisitor {
             shoppingCart.getShoppingItems().get(i).accept(this);
         }
 
-        System.out.println("\nAmount to pay : £" + shoppingCart.getTotalBill());
+        System.out.println("\nAmount to pay : £" + shoppingCart.getTotalBill().setScale(2, RoundingMode.HALF_UP));
     }
 
     @Override
     public void visitCartItem(Item item) {
-        double itemCost = 0.0;
+        //double itemCost = 0.0;
+        BigDecimal itemCost = new BigDecimal(0.0);
 
         DiscountCalculation(item);
 
         if (!itemDoesNotExist) {
-            itemCost = newQuantity * item.getPrice();
+            itemCost = item.getPrice().multiply(BigDecimal.valueOf(newQuantity));
 
             item.getShoppingCart().setTotalBill(
-                    item.getShoppingCart().getTotalBill() + itemCost);
+                    item.getShoppingCart().getTotalBill().add(itemCost));
 
             System.out.println(item.getQuantity() + " x " +
                     item.getName().toUpperCase() +
-                    " @ " + item.getPrice() + " - £" + itemCost);
+                    " @ " + item.getPrice().setScale(2, RoundingMode.HALF_UP) + " - £" + itemCost.setScale(2, RoundingMode.HALF_UP));
         } else {
-            throw new IllegalArgumentException("Item such item in Stock!");
+            throw new IllegalArgumentException("No such Item in Stock!");
         }
 
     }
