@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by vivek on 18/03/2017.
+ * Created by vivek.
  */
 public class ShoppingCart implements ShoppingCartElement {
 

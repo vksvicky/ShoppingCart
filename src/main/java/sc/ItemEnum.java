@@ -1,7 +1,7 @@
 package sc;
 
 /**
- * Created by vivek on 18/03/2017.
+ * Created by vivek.
  */
 public enum ItemEnum {
     Apple("Apple"),

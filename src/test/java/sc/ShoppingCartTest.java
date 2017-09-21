@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 /**
- * Created by vivek on 18/03/2017.
+ * Created by vivek.
  */
 public class ShoppingCartTest {
 

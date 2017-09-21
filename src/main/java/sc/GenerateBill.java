@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- * Created by vivek on 18/03/2017.
+ * Created by vivek.
  */
 public class GenerateBill implements ShoppingVisitor {
     boolean outOfStock = false;

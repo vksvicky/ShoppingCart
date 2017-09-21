@@ -3,7 +3,7 @@ package sc;
 import java.math.BigDecimal;
 
 /**
- * Created by vivek on 18/03/2017.
+ * Created by vivek.
  */
 public class ShowCustomerBill {
     static BigDecimal appleCost = new BigDecimal(0.60);
