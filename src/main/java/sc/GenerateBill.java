@@ -4,13 +4,12 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- * Created by vivek on 07/10/2014.
+ * Created by vivek on 18/03/2017.
  */
 public class GenerateBill implements ShoppingVisitor {
-    boolean itemDoesNotExist = false;
+    boolean outOfStock = false;
     int newQuantity = 0;
 
-    @Override
     public void visitShoppingCart(ShoppingCart shoppingCart) {
         for (int i = 0; i < shoppingCart.getShoppingItems().size(); i++) {
             shoppingCart.getShoppingItems().get(i).accept(this);
@@ -19,14 +18,14 @@ public class GenerateBill implements ShoppingVisitor {
         System.out.println("\nAmount to pay : £" + shoppingCart.getTotalBill().setScale(2, RoundingMode.HALF_UP));
     }
 
-    @Override
     public void visitCartItem(Item item) {
-        //double itemCost = 0.0;
-        BigDecimal itemCost = new BigDecimal(0.0);
+        BigDecimal itemCost;
+
+        newQuantity = item.getQuantity();
 
         DiscountCalculation(item);
 
-        if (!itemDoesNotExist) {
+        if (!outOfStock) {
             itemCost = item.getPrice().multiply(BigDecimal.valueOf(newQuantity));
 
             item.getShoppingCart().setTotalBill(
@@ -46,11 +45,12 @@ public class GenerateBill implements ShoppingVisitor {
 
         switch (ItemEnum.valueOf(item.getName())) {
             case Apple:
-            case Banana:
                 //Specifically checking buy 1 get 1 offer
                 //Checking if there are odd apples, then 1 will be need to added explicitly
                 if (item.getQuantity() > 1) {
                     newQuantity = item.getQuantity() - (item.getQuantity() / 2);
+                } else {
+                    newQuantity = item.getQuantity();
                 }
                 break;
 
@@ -58,14 +58,15 @@ public class GenerateBill implements ShoppingVisitor {
                 //Specifically checking 3 for the price of 2
                 if (item.getQuantity() > 2) {
                     newQuantity = item.getQuantity() - (item.getQuantity() / 3);
+                } else {
+                    newQuantity = item.getQuantity();
                 }
                 break;
 
             default:
-                itemDoesNotExist = true;
+                outOfStock = true;
                 break;
         }
     }
-
 
 }

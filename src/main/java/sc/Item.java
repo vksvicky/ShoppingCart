@@ -3,7 +3,7 @@ package sc;
 import java.math.BigDecimal;
 
 /**
- * Created by vivek on 07/10/2014.
+ * Created by vivek on 18/03/2017.
  */
 public class Item implements ShoppingCartElement {
     private String name;
@@ -50,7 +50,6 @@ public class Item implements ShoppingCartElement {
         this.shoppingCart = shoppingCart;
     }
 
-    @Override
     public void accept(ShoppingVisitor shoppingVisitor) {
         shoppingVisitor.visitCartItem(this);
     }

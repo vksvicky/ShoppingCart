@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by vivek on 07/10/2014.
+ * Created by vivek on 18/03/2017.
  */
 public class ShoppingCart implements ShoppingCartElement {
 
@@ -34,7 +34,6 @@ public class ShoppingCart implements ShoppingCartElement {
         this.totalBill = totalBill;
     }
 
-    @Override
     public void accept(ShoppingVisitor shoppingVisitor) {
         shoppingVisitor.visitShoppingCart(this);
     }

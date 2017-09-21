@@ -3,7 +3,7 @@ package sc;
 import java.math.BigDecimal;
 
 /**
- * Created by vivek on 07/10/2014.
+ * Created by vivek on 18/03/2017.
  */
 public class ShowCustomerBill {
     static BigDecimal appleCost = new BigDecimal(0.60);
@@ -44,14 +44,8 @@ public class ShowCustomerBill {
         shoppingCart.accept(new GenerateBill());
 
         shoppingCart = new ShoppingCart();
-        shoppingCart.addShoppingItem(new Item("Apple", 4, appleCost));
-        shoppingCart.addShoppingItem(new Item("Orange", 3, orangeCost));
-
-        shoppingCart.accept(new GenerateBill());
-
-        shoppingCart = new ShoppingCart();
-        shoppingCart.addShoppingItem(new Item("Banana", 4, appleCost));
-        shoppingCart.addShoppingItem(new Item("Orange", 3, orangeCost));
+        shoppingCart.addShoppingItem(new Item("Apple", 3, appleCost));
+        shoppingCart.addShoppingItem(new Item("Orange", 2, orangeCost));
 
         shoppingCart.accept(new GenerateBill());
     }

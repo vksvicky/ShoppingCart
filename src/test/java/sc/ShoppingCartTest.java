@@ -8,23 +8,22 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 /**
- * Created by vivek on 07/10/2014.
+ * Created by vivek on 18/03/2017.
  */
 public class ShoppingCartTest {
 
     ShoppingCart shoppingCart;
     static BigDecimal appleCost = new BigDecimal(0.60);
     static BigDecimal orangeCost = new BigDecimal(0.25);
-    static BigDecimal bananaCost = new BigDecimal(0.20);
 
     @Before
     public void setUp() {
@@ -56,19 +55,16 @@ public class ShoppingCartTest {
     }
 
     @Test
-    public void testShoppingCartContainsApplesAndThreeApples() {
+    public void testShoppingCartContainsThreeApples() {
         shoppingCart.addShoppingItem(new Item(ItemEnum.Apple.toString(), 3, appleCost));
 
-//        assertThat(shoppingCart.getShoppingItems(), containsInAnyOrder(hasProperty("name", is("Apple")), hasProperty("quantity", equalTo(3))));
-
-        assertThat(shoppingCart.getShoppingItems(), containsInAnyOrder(hasProperty("name", is(ItemEnum.Apple.toString()))));
+        assertThat(shoppingCart.getShoppingItems(), contains(hasProperty("name", is(ItemEnum.Apple.toString()))));
         assertThat(shoppingCart.getShoppingItems(), hasItem(Matchers.<Item>hasProperty("quantity", equalTo(3))));
 
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testShoppingCartDoesNotContainItemsInSet() {
-        //shoppingCart.addShoppingItem(new Item(ItemEnum.Banana.toString(), 1, bananaCost));
         shoppingCart.addShoppingItem(new Item("Strawberry", 1, BigDecimal.valueOf(0.15)));
 
         for (Item _item : shoppingCart.getShoppingItems()) {
@@ -84,8 +80,27 @@ public class ShoppingCartTest {
 
         shoppingCart.accept(new GenerateBill());
 
-        assertThat(shoppingCart.getTotalBill().setScale(2, RoundingMode.HALF_UP), is(new BigDecimal(1.7).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(shoppingCart.getTotalBill().setScale(2, RoundingMode.HALF_UP), is(new BigDecimal(1.70).setScale(2, RoundingMode.HALF_UP)));
     }
+
+    @Test
+    public void testBuyOneGetOneAppleFreeDiscount() {
+        shoppingCart.addShoppingItem(new Item(ItemEnum.Apple.toString(), 2, appleCost));
+
+        shoppingCart.accept(new GenerateBill());
+
+        assertThat(shoppingCart.getTotalBill().setScale(2, RoundingMode.HALF_UP), is(new BigDecimal(0.60).setScale(2, RoundingMode.HALF_UP)));
+    }
+
+    @Test
+    public void testBuyThreeOrangesForThePriceOfTwo() {
+        shoppingCart.addShoppingItem(new Item(ItemEnum.Orange.toString(), 3, orangeCost));
+
+        shoppingCart.accept(new GenerateBill());
+
+        assertThat(shoppingCart.getTotalBill().setScale(2, RoundingMode.HALF_UP), is(new BigDecimal(0.50).setScale(2, RoundingMode.HALF_UP)));
+    }
+
 
     @Test
     public void testDiscountOnApple() {
@@ -103,37 +118,7 @@ public class ShoppingCartTest {
 
         shoppingCart.accept(new GenerateBill());
 
-        assertThat(shoppingCart.getTotalBill().setScale(2, RoundingMode.HALF_UP), is(new BigDecimal(2.7).setScale(2, RoundingMode.HALF_UP)));
-    }
-
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testUnknowItem() {
-        shoppingCart.addShoppingItem(new Item("Peaches", 4, bananaCost));
-        shoppingCart.accept(new GenerateBill());
-
-        assertThat(shoppingCart.getTotalBill(), is(2.7));
-    }
-
-    @Test
-    public void testOneBanana() {
-        shoppingCart.addShoppingItem(new Item(ItemEnum.Banana.toString(), 1, bananaCost));
-
-        assertThat(shoppingCart.getShoppingItems().size(), is(1));
-        assertThat(shoppingCart.getShoppingItems().get(0).getName(), is(ItemEnum.Banana.toString()));
-
-        shoppingCart.accept(new GenerateBill());
-
-        assertThat(shoppingCart.getTotalBill(), is(bananaCost));
-    }
-
-    @Test
-    public void testNewItem() {
-        shoppingCart.addShoppingItem(new Item(ItemEnum.Banana.toString(), 4, bananaCost));
-
-        shoppingCart.accept(new GenerateBill());
-
-        assertThat(shoppingCart.getTotalBill().setScale(2, RoundingMode.HALF_UP), is(new BigDecimal(0.4).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(shoppingCart.getTotalBill().setScale(2, RoundingMode.HALF_UP), is(new BigDecimal(2.70).setScale(2, RoundingMode.HALF_UP)));
     }
 
 }

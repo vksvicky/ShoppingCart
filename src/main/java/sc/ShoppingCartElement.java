@@ -1,8 +1,8 @@
 package sc;
 
 /**
- * Created by vivek on 07/10/2014.
+ * Created by vivek on 18/03/2017.
  */
 public interface ShoppingCartElement {
-    public void accept(ShoppingVisitor shoppingVisitor);
+    void accept(ShoppingVisitor shoppingVisitor);
 }

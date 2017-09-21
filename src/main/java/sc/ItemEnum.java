@@ -1,19 +1,18 @@
 package sc;
 
 /**
- * Created by vivek on 08/10/2014.
+ * Created by vivek on 18/03/2017.
  */
 public enum ItemEnum {
-    Apple ("Apple"),
-    Orange ("Orange"),
-    Banana ("Banana");
+    Apple("Apple"),
+    Orange("Orange");
 
     private final String value;
 
     /**
      * @param value
      */
-    private ItemEnum(final String value) {
+    ItemEnum(final String value) {
         this.value = value;
     }
 
