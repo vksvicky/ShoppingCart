@@ -22,8 +22,8 @@ import static org.junit.Assert.assertThat;
 public class ShoppingCartTest {
 
     ShoppingCart shoppingCart;
-    static BigDecimal appleCost = new BigDecimal(0.60);
-    static BigDecimal orangeCost = new BigDecimal(0.25);
+    static BigDecimal appleCost = ItemEnum.Apple.getCost();
+    static BigDecimal orangeCost = ItemEnum.Orange.getCost();
 
     @Before
     public void setUp() {

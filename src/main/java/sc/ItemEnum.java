@@ -1,24 +1,34 @@
 package sc;
 
+import java.math.BigDecimal;
+
 /**
  * Created by vivek.
  */
 public enum ItemEnum {
-    Apple("Apple"),
-    Orange("Orange");
+    Apple("Apple", 0.60),
+    Orange("Orange", 0.25);
 
-    private final String value;
+    private String value = null;
+    private BigDecimal cost = null;
 
-    /**
-     * @param value
-     */
-    ItemEnum(final String value) {
+
+    ItemEnum(String value, double cost) {
         this.value = value;
+        this.cost = new BigDecimal(cost);
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public BigDecimal getCost() {
+        return cost;
     }
 
     /* (non-Javadoc)
-     * @see java.lang.Enum#toString()
-     */
+         * @see java.lang.Enum#toString()
+         */
     @Override
     public String toString() {
         return value;
